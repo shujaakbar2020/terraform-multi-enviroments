@@ -1,0 +1,32 @@
+name: Terraform CD
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    # Simple deployment strategy: Deploy Dev, then Prod (could use environments/approvals in real life)
+    strategy:
+      matrix:
+        environment: [dev] # For safety, only auto-deploying dev in this example
+        # Add 'prod' to the list if you want auto-deploy to prod, or use a separate job with approval
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: |
+          cd environments/${{ matrix.environment }}
+          terraform init
+
+      - name: Terraform Apply
+        run: |
+          cd environments/${{ matrix.environment }}
+          terraform apply -auto-approve -input=false
