@@ -2,6 +2,8 @@
 
 This project demonstrates a best-practice directory structure for creating multi-environment infrastructure using Terraform.
 
+![Multi Environment Infrastructure](./multi-env-infra.png)
+
 ## Structure
 
 ```
