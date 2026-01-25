@@ -4,10 +4,10 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-multi-cloud-setup-abcd"
+    bucket         = "terraform-state-multi-cloud-setup-dev"
     key            = "dev/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-state-locks"
+    use_lockfile = true
     encrypt        = true
   }
 }
@@ -15,13 +15,24 @@ terraform {
 module "networking" {
   source      = "../../modules/networking"
   vpc_cidr    = var.vpc_cidr
-  environment = "dev"
+  public_subnet_cidr  = var.public_subnet_cidr
+  private_subnet_cidr = var.private_subnet_cidr
+  az               = var.az
+  env = "dev"
+  allowed_ssh_cidr = var.allowed_ssh_cidr
+  app_port         = var.app_port
 }
 
 module "compute" {
-  source        = "../../modules/compute"
-  environment   = "dev"
-  instance_type = var.instance_type
+  source = "../../modules/compute"
+
   ami_id        = var.ami_id
-  subnet_id     = module.networking.subnet_id
+  instance_type = var.instance_type
+
+  subnet_id = module.networking.subnet_id
+  security_group_ids =  module.networking.security_group_ids
+
+  key_name = var.key_name
+
+  env  = var.env
 }

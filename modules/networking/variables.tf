@@ -1,15 +1,33 @@
 variable "vpc_cidr" {
-  description = "The CIDR block for the VPC"
+  description = "VPC CIDR"
   type        = string
 }
 
-variable "environment" {
-  description = "The deployment environment (e.g., dev, prod)"
+variable "public_subnet_cidr" {
+  type = string
+}
+
+variable "private_subnet_cidr" {
+  type = string
+}
+
+variable "az" {
+  description = "Availability Zone"
   type        = string
 }
 
-variable "availability_zone" {
-  description = "The availability zone for the subnet"
+variable "env" {
+  type = string
+}
+
+variable "allowed_ssh_cidr" {
+  description = "CIDR allowed to SSH public resources"
   type        = string
-  default     = "us-east-1a"
+  default     = "0.0.0.0/0" # tighten in prod!
+}
+
+variable "app_port" {
+  description = "Application port (example 80, 443, 3000)"
+  type        = number
+  default     = 80
 }
