@@ -20,7 +20,7 @@ variable "ami_id" {
 }
 
 variable "key_name" {
-  type = string
+  type    = string
   default = "multi_cloud_setup"
 }
 
